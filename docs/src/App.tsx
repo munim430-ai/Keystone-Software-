@@ -1,8 +1,11 @@
+import { lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MagneticCursor from './components/MagneticCursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProofStrip from './components/ProofStrip';
+
+const DeviceShowcase = lazy(() => import('./components/DeviceShowcase'));
 import Work from './components/Work';
 import Services from './components/Services';
 import Process from './components/Process';
@@ -27,6 +30,9 @@ export default function App() {
 
           <main>
             <Hero />
+            <Suspense fallback={<div style={{ minHeight: '100vh', background: '#000' }} />}>
+              <DeviceShowcase />
+            </Suspense>
             <ProofStrip />
             <Work />
             <Services />
