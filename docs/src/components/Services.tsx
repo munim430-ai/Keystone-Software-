@@ -1,77 +1,95 @@
 import { motion } from 'framer-motion';
-import { Code2, Cpu, Globe, Layers } from 'lucide-react';
+import { Code2, Cpu, Globe, Layers, Smartphone, Zap } from 'lucide-react';
 
 const services = [
   {
-    title: "Custom Software",
-    description: "Tailored solutions designed to solve complex business challenges with precision and scale.",
+    title: 'Custom Software',
+    description: 'Tailored solutions engineered to solve complex business challenges with precision, scale, and zero bloat.',
     icon: Code2,
+    size: 'large',
   },
   {
-    title: "SaaS Platforms",
-    description: "Cloud-native architectures that grow with your user base, ensuring high availability and performance.",
-    icon: Layers,
-  },
-  {
-    title: "AI Automation",
-    description: "Integrating intelligent agents and machine learning to streamline workflows and reduce overhead.",
+    title: 'AI Automation',
+    description: 'Intelligent agents and ML pipelines that eliminate manual overhead and compound over time.',
     icon: Cpu,
+    size: 'large',
   },
   {
-    title: "Digital Strategy",
-    description: "Comprehensive roadmaps for digital transformation and long-term technological sustainability.",
+    title: 'SaaS Platforms',
+    description: 'Cloud-native, multi-tenant architectures that grow with your user base.',
+    icon: Layers,
+    size: 'small',
+  },
+  {
+    title: 'Mobile Apps',
+    description: 'Bangla-first Android apps engineered for low-end devices and high-volume distribution.',
+    icon: Smartphone,
+    size: 'small',
+  },
+  {
+    title: 'Web Consulting',
+    description: 'Strategic roadmaps for digital transformation and long-term technical sustainability.',
     icon: Globe,
-  }
+    size: 'small',
+  },
+  {
+    title: 'Rapid Delivery',
+    description: 'From idea to shipped product in weeks, not months. Speed is a feature.',
+    icon: Zap,
+    size: 'wide',
+  },
 ];
 
 export default function Services() {
   return (
-    <section className="py-32 px-6 bg-surface relative z-10">
+    <section id="services" className="py-32 px-6 bg-black">
       <div className="max-w-7xl mx-auto">
         <div className="mb-20">
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-medium tracking-[0.3em] uppercase text-white/40 block mb-4"
+            className="text-[10px] font-medium tracking-[0.3em] uppercase text-white/30 block mb-4"
           >
             Our Expertise
           </motion.span>
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-display font-light text-white"
+            className="text-4xl md:text-6xl font-light text-white tracking-tight"
           >
-            Engineered for <span className="italic">Excellence</span>
+            Engineered for <span className="italic">excellence.</span>
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ 
-                delay: index * 0.1, 
-                duration: 0.6, 
-                ease: [0.23, 1, 0.32, 1] 
-              }}
-              className="group p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors duration-500 cursor-pointer"
-            >
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-white group-hover:text-black transition-colors duration-500">
-                <service.icon size={24} />
-              </div>
-              <h3 className="text-xl font-medium text-white mb-4 tracking-tight">{service.title}</h3>
-              <p className="text-white/50 leading-relaxed font-light text-sm">
-                {service.description}
-              </p>
-            </motion.div>
-          ))}
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[220px]">
+          {services.map((service, i) => {
+            const Icon = service.icon;
+            const colSpan =
+              service.size === 'large' ? 'md:col-span-1 md:row-span-2' :
+              service.size === 'wide'  ? 'md:col-span-2' : '';
+
+            return (
+              <motion.div
+                key={service.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                className={`glass-card rounded-2xl p-8 flex flex-col justify-between group transition-all duration-500 ${colSpan}`}
+              >
+                <div className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-400">
+                  <Icon size={18} className="text-white/60 group-hover:text-black transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-white mb-2 tracking-tight">{service.title}</h3>
+                  <p className="text-sm text-white/35 leading-relaxed font-light">{service.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,199 +1,128 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
-import KeystoneObject from './KeystoneObject';
+import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SplitType from 'split-type';
+import KeystoneLogo from '../assets/KeystoneLogo';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"]
-  });
+  const logoRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const subRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
 
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
+  useEffect(() => {
+    const section = sectionRef.current;
+    const logo = logoRef.current;
+    const headline = headlineRef.current;
+    if (!section || !logo || !headline) return;
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
+    // Split headline into chars for stagger reveal
+    const split = new SplitType(headline, { types: 'chars,words' });
+    gsap.set(split.chars, { y: '110%', opacity: 0 });
+    gsap.to(split.chars, {
+      y: '0%',
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
-      },
-    },
-  };
+      duration: 0.9,
+      stagger: 0.025,
+      ease: 'power4.out',
+      delay: 0.4,
+    });
 
-  const titleVariants = {
-    hidden: { opacity: 0, y: 40, rotateX: 45 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      rotateX: 0,
-      transition: { 
-        duration: 1.2, 
-        ease: [0.16, 1, 0.3, 1] 
-      },
-    },
-  };
+    gsap.fromTo(
+      [subRef.current, ctaRef.current],
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power3.out', delay: 1.1 }
+    );
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { 
-        duration: 1, 
-        ease: [0.16, 1, 0.3, 1] 
+    // Logo morph: pin section, shrink logo toward nav position on scroll
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=600',
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
       },
-    },
-  };
+    });
 
-  const glowVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { 
-        duration: 2, 
-        ease: "easeOut" 
-      },
-    },
-  };
+    tl.to(logo, {
+      scale: 0.22,
+      x: () => -window.innerWidth / 2 + 120,
+      y: () => -(section.offsetHeight / 2) + 32,
+      ease: 'none',
+    });
+
+    tl.to(
+      [headline, subRef.current, ctaRef.current],
+      { opacity: 0, y: -40, ease: 'none' },
+      0
+    );
+
+    return () => {
+      split.revert();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, []);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-20 overflow-hidden perspective-1000"
+      className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden bg-black"
     >
-      {/* Background Ambient Light */}
-      <motion.div 
-        variants={glowVariants}
-        initial="hidden"
-        animate="visible"
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-[120px] pointer-events-none" 
-      />
-      
-      <motion.div 
-        style={{ opacity, scale, y }}
-        className="z-10 flex flex-col items-center text-center max-w-5xl"
-      >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col items-center"
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/[0.03] rounded-full blur-[100px]" />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center text-center max-w-5xl w-full">
+        <div ref={logoRef} className="mb-16 origin-center">
+          <KeystoneLogo className="w-64 md:w-80 h-auto" />
+        </div>
+
+        <div className="overflow-hidden mb-8">
+          <h1
+            ref={headlineRef}
+            className="text-5xl md:text-8xl font-light tracking-tight text-white leading-[1]"
+          >
+            Efficiency, Engineered.
+          </h1>
+        </div>
+
+        <p
+          ref={subRef}
+          className="text-base md:text-xl text-white/40 max-w-xl mb-12 font-light leading-relaxed"
         >
-          <motion.span 
-            variants={itemVariants}
-            className="text-xs md:text-sm font-medium tracking-[0.4em] uppercase text-white/40 mb-8"
-          >
-            Keystone Software Solutions
-          </motion.span>
-          
-          <motion.h1 
-            variants={titleVariants}
-            className="text-6xl md:text-9xl font-display font-light tracking-tight text-white mb-10 leading-[0.85] relative"
-          >
-            <motion.span
-              animate={{
-                textShadow: [
-                  "0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa, 0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa",
-                  "0 0 4px #fff, 0 0 7px #fff, 0 0 13px #fff, 0 0 25px #0fa, 0 0 50px #0fa, 0 0 60px #0fa, 0 0 70px #0fa, 0 0 100px #0fa",
-                  "0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa, 0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa",
-                ],
-                x: [0, -2, 2, -1, 0],
-                y: [0, 1, -1, 0.5, 0],
-                skewX: [0, -1, 1, -0.5, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="inline-block"
-            >
-              Architecting
-            </motion.span>
-            <br />
-            <motion.span 
-              animate={{
-                textShadow: [
-                  "0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #f0a, 0 0 82px #f0a, 0 0 92px #f0a, 0 0 102px #f0a, 0 0 151px #f0a",
-                  "0 0 4px #fff, 0 0 7px #fff, 0 0 13px #fff, 0 0 25px #f0a, 0 0 50px #f0a, 0 0 60px #f0a, 0 0 70px #f0a, 0 0 100px #f0a",
-                  "0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #f0a, 0 0 82px #f0a, 0 0 92px #f0a, 0 0 102px #f0a, 0 0 151px #f0a",
-                ],
-                x: [0, 2, -2, 1, 0],
-                y: [0, -1, 1, -0.5, 0],
-                skewX: [0, 1, -1, 0.5, 0],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear",
-                delay: 0.5
-              }}
-              className="italic font-normal inline-block"
-            >
-              Intelligent
-            </motion.span>{" "}
-            <motion.span
-              animate={{
-                textShadow: [
-                  "0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0af, 0 0 82px #0af, 0 0 92px #0af, 0 0 102px #0af, 0 0 151px #0af",
-                  "0 0 4px #fff, 0 0 7px #fff, 0 0 13px #fff, 0 0 25px #0af, 0 0 50px #0af, 0 0 60px #0af, 0 0 70px #0af, 0 0 100px #0af",
-                  "0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0af, 0 0 82px #0af, 0 0 92px #0af, 0 0 102px #0af, 0 0 151px #0af",
-                ],
-                x: [0, -1, 1, -0.5, 0],
-                y: [0, 0.5, -0.5, 0.2, 0],
-                skewX: [0, -0.5, 0.5, -0.2, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "linear",
-                delay: 1
-              }}
-              className="inline-block"
-            >
-              Systems
-            </motion.span>
-          </motion.h1>
-          
-          <motion.p 
-            variants={itemVariants}
-            className="text-lg md:text-2xl text-white/50 max-w-2xl mb-16 font-light leading-relaxed"
-          >
-            Custom software, scalable SaaS platforms, and AI-driven automation built for the next generation of digital infrastructure.
-          </motion.p>
-          
-          <motion.div variants={itemVariants} className="flex items-center gap-8">
-            <button className="px-10 py-5 bg-white text-black rounded-full font-medium hover:bg-white/90 transition-all duration-300 hover:scale-105">
-              Start a Project
-            </button>
-            <a href="#work" className="text-sm uppercase tracking-widest text-white/60 hover:text-white transition-colors border-b border-white/20 pb-1">
-              View Folio
-            </a>
-          </motion.div>
-        </motion.div>
-      </motion.div>
+          Custom software, AI automation, and scalable SaaS — built for businesses that move fast.
+        </p>
 
-      <motion.div 
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -150]) }}
-        className="relative mt-20 md:mt-12"
-      >
-        <KeystoneObject />
-      </motion.div>
+        <div ref={ctaRef} className="flex items-center gap-8">
+          <a
+            href="#contact"
+            className="px-8 py-4 bg-white text-black rounded-full text-sm font-medium tracking-wide hover:bg-white/90 transition-all duration-300 hover:scale-105"
+          >
+            Start a Project
+          </a>
+          <a
+            href="#work"
+            className="text-xs uppercase tracking-[0.25em] text-white/40 hover:text-white transition-colors border-b border-white/15 pb-0.5"
+          >
+            View Work
+          </a>
+        </div>
+      </div>
 
-      {/* Scroll Indicator */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] uppercase tracking-widest text-white/30">Scroll</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-white/30 to-transparent" />
+        <span className="text-[9px] uppercase tracking-[0.35em] text-white/20">Scroll</span>
+        <div className="w-px h-10 bg-gradient-to-b from-white/20 to-transparent" />
       </motion.div>
     </section>
   );
