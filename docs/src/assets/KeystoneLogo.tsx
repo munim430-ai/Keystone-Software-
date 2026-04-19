@@ -3,13 +3,7 @@ interface Props {
 }
 
 export default function KeystoneLogo({ className = '' }: Props) {
-  /*
-    The distinctive element of this logo is the y→g ligature:
-    the y's descender curves down into an open circle (the g),
-    sitting below the baseline. We render this as SVG strokes
-    so it scales cleanly at any size and works at any color.
-  */
-  const sw = 7.2; // stroke width — matches weight of Geist 700 at this scale
+  const sw = 7.2;
 
   return (
     <svg
@@ -17,57 +11,70 @@ export default function KeystoneLogo({ className = '' }: Props) {
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
       aria-label="Keystone Software Solutions"
     >
-      {/* ── "Ke" ── rendered via font */}
+      <title>Keystone Software Solutions</title>
+
+      {/* ── "Ke" ── */}
       <text
         x="0" y="57"
         fontFamily="'Geist Variable', 'Inter', system-ui, sans-serif"
         fontWeight="700"
         fontSize="64"
         letterSpacing="-2"
+        aria-hidden="true"
       >
         Ke
       </text>
 
-      {/* ── y + g ligature ── hand-drawn SVG at x≈86 ── */}
-      <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeWidth={sw}>
+      {/* ── y + g ligature (custom SVG paths) ── */}
+      <g
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        strokeWidth={sw}
+        aria-hidden="true"
+      >
         {/* Left arm of y */}
         <line x1="88"  y1="9"  x2="108" y2="57" />
-        {/* Right arm of y, continuing as descender */}
+        {/* Right arm of y → descender */}
         <polyline points="128,9 108,57 102,74" />
-        {/* Connector from descender tip to top of g circle */}
+        {/* Connector to circle */}
         <line x1="102" y1="74" x2="94" y2="68" />
         {/*
           Open circle = the g.
-          Center: (82, 80), radius: 12
-          300° arc — gap of 60° at the bottom.
-          Arc end points at ±60° from the bottom (i.e. at 120° and 60° in SVG coords):
-            60°  → (82 + 12·cos60°,  80 + 12·sin60°)  = (88,   90.4)
-            120° → (82 + 12·cos120°, 80 + 12·sin120°) = (76,   90.4)
-          large-arc=1, sweep=1 (clockwise, long path via top)
+          Center (82, 80), r=12.
+          300° arc leaving a 60° gap at the bottom.
+          End-points at ±60° from bottom (120° and 60° in SVG coords):
+            60°  → (88,   90.4)
+            120° → (76,   90.4)
+          large-arc=1, sweep=1 (clockwise long path via top)
         */}
         <path d="M 88,90.4 A 12,12 0 1,1 76,90.4" />
       </g>
 
-      {/* ── "stone" ── rendered via font, after the gy element (~55px wide) */}
+      {/* ── "stone" ── */}
       <text
         x="140" y="57"
         fontFamily="'Geist Variable', 'Inter', system-ui, sans-serif"
         fontWeight="700"
         fontSize="64"
         letterSpacing="-2"
+        aria-hidden="true"
       >
         stone
       </text>
 
-      {/* ── "Software Solutions" subtitle ── below-right */}
+      {/* ── "Software Solutions" subtitle ── */}
       <text
         x="178" y="79"
         fontFamily="'Geist Variable', 'Inter', system-ui, sans-serif"
         fontWeight="400"
         fontSize="12"
         letterSpacing="0.3"
+        aria-hidden="true"
       >
         Software Solutions
       </text>

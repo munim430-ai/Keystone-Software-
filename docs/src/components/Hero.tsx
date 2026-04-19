@@ -20,8 +20,10 @@ export default function Hero() {
     const headline = headlineRef.current;
     if (!section || !logo || !headline) return;
 
-    // Split headline into chars for stagger reveal
+    // Hide headline before split to prevent layout flash
+    gsap.set(headline, { visibility: 'hidden' });
     const split = new SplitType(headline, { types: 'chars,words' });
+    gsap.set(headline, { visibility: 'visible' });
     gsap.set(split.chars, { y: '110%', opacity: 0 });
     gsap.to(split.chars, {
       y: '0%',

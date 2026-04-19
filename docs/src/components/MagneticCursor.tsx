@@ -6,6 +6,9 @@ export default function MagneticCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Don't activate on touch/mobile devices — they have no pointer cursor
+    if (window.matchMedia('(hover: none)').matches) return;
+
     const dot = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) return;
