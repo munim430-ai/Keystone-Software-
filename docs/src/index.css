@@ -44,12 +44,14 @@
     @apply bg-background text-foreground font-sans antialiased;
     background-color: #000000;
   }
+}
 
-  /* Hide default cursor only on pointer (non-touch) devices */
-  @media (hover: hover) and (pointer: fine) {
-    body, a, button, [role="button"] {
-      cursor: none;
-    }
+@media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button,
+  [role="button"] {
+    cursor: none;
   }
 }
 
@@ -103,3 +105,63 @@
 }
 
 @custom-variant dark (&:is(.dark *));
+
+/* Morphing blob background */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.055;
+  background: #ffffff;
+  animation: blob-morph 20s ease-in-out infinite;
+  will-change: transform, border-radius;
+}
+
+.blob-1 {
+  width: 55vw;
+  height: 55vw;
+  top: -20%;
+  left: 15%;
+  animation-duration: 22s;
+}
+
+.blob-2 {
+  width: 40vw;
+  height: 40vw;
+  bottom: -15%;
+  left: -10%;
+  animation-duration: 28s;
+  animation-delay: -9s;
+}
+
+.blob-3 {
+  width: 48vw;
+  height: 48vw;
+  top: 20%;
+  right: -15%;
+  animation-duration: 25s;
+  animation-delay: -16s;
+}
+
+@keyframes blob-morph {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: translate(0, 0) scale(1);
+  }
+  20% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: translate(4%, 6%) scale(1.06);
+  }
+  40% {
+    border-radius: 50% 60% 30% 60% / 30% 40% 70% 50%;
+    transform: translate(-3%, 4%) scale(0.94);
+  }
+  60% {
+    border-radius: 40% 70% 50% 40% / 70% 30% 50% 60%;
+    transform: translate(5%, -3%) scale(1.03);
+  }
+  80% {
+    border-radius: 70% 30% 60% 40% / 40% 70% 30% 60%;
+    transform: translate(-2%, -5%) scale(0.98);
+  }
+}
