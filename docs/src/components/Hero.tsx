@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
 import KeystoneLogo from '../assets/KeystoneLogo';
+import AnimatedBackground from './AnimatedBackground';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,9 +75,7 @@ export default function Hero() {
       ref={sectionRef}
       className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden bg-black"
     >
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/[0.03] rounded-full blur-[100px]" />
-      </div>
+      <AnimatedBackground />
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-5xl w-full">
         <div ref={logoRef} className="mb-16 origin-center">
