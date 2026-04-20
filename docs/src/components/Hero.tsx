@@ -44,7 +44,26 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-black">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-black overflow-hidden">
+
+      {/* Liquid glass blob background */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        <div className="liq-blob liq-1" />
+        <div className="liq-blob liq-2" />
+        <div className="liq-blob liq-3" />
+        <div className="liq-blob liq-4" />
+        <div className="liq-blob liq-5" />
+      </div>
+
+      {/* Radial vignette to keep center dark/readable */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, #000 100%)',
+          zIndex: 1,
+        }}
+      />
+
       <div className="relative z-10 flex flex-col items-center text-center max-w-5xl w-full">
         <div ref={logoRef} className="mb-10 md:mb-16" style={{ opacity: 0, transform: 'translateY(20px)' }}>
           <KeystoneLogo className="w-48 md:w-72 h-auto" />
@@ -91,7 +110,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
       >
         <span className="text-[9px] uppercase tracking-[0.35em] text-white/20">Scroll</span>
         <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />

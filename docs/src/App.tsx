@@ -4,8 +4,6 @@ import MagneticCursor from './components/MagneticCursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProofStrip from './components/ProofStrip';
-import AnimatedBackground from './components/AnimatedBackground';
-
 const DeviceShowcase = lazy(() => import('./components/DeviceShowcase'));
 import Work from './components/Work';
 import Services from './components/Services';
@@ -17,9 +15,6 @@ import SmoothScroll from './components/SmoothScroll';
 export default function App() {
   return (
     <div className="relative bg-black text-white selection:bg-white selection:text-black">
-      {/* Fixed site-wide animated blob background */}
-      <AnimatedBackground />
-
       <MagneticCursor />
       <SmoothScroll />
 

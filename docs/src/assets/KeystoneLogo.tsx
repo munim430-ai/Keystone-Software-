@@ -9,6 +9,7 @@ export default function KeystoneLogo({ className = '' }: Props) {
       alt="Keystone Software Solutions"
       className={className}
       draggable={false}
+      style={{ mixBlendMode: 'screen' }}
     />
   );
 }
