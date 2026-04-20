@@ -4,6 +4,7 @@ import MagneticCursor from './components/MagneticCursor';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProofStrip from './components/ProofStrip';
+import AnimatedBackground from './components/AnimatedBackground';
 
 const DeviceShowcase = lazy(() => import('./components/DeviceShowcase'));
 import Work from './components/Work';
@@ -16,6 +17,9 @@ import SmoothScroll from './components/SmoothScroll';
 export default function App() {
   return (
     <div className="relative bg-black text-white selection:bg-white selection:text-black">
+      {/* Fixed site-wide animated blob background */}
+      <AnimatedBackground />
+
       <MagneticCursor />
       <SmoothScroll />
 
@@ -24,13 +28,14 @@ export default function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="relative z-10"
         >
           <Navbar />
 
           <main>
             <Hero />
-            <Suspense fallback={<div style={{ minHeight: '100vh', background: '#000' }} />}>
+            <Suspense fallback={<div style={{ minHeight: '60vh', background: '#000' }} />}>
               <DeviceShowcase />
             </Suspense>
             <ProofStrip />
@@ -40,10 +45,7 @@ export default function App() {
             <About />
 
             {/* Contact CTA */}
-            <section className="py-40 px-6 text-center relative overflow-hidden bg-black border-t border-white/5">
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.025] rounded-full blur-[80px]" />
-              </div>
+            <section className="py-28 md:py-40 px-6 text-center relative overflow-hidden bg-black border-t border-white/5">
               <div className="max-w-4xl mx-auto relative z-10">
                 <motion.p
                   initial={{ opacity: 0, y: 12 }}
@@ -57,7 +59,7 @@ export default function App() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="text-5xl md:text-8xl font-light text-white mb-14 leading-[0.95] tracking-tight"
+                  className="text-4xl md:text-8xl font-light text-white mb-10 md:mb-14 leading-[0.95] tracking-tight"
                 >
                   Ready to build<br />
                   <span className="italic">something</span> great?
@@ -66,11 +68,11 @@ export default function App() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  className="flex flex-col sm:flex-row items-center justify-center gap-6"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
                 >
                   <a
                     href="mailto:hello@keystonesoftware.dev"
-                    className="px-10 py-5 bg-white text-black rounded-full font-medium text-sm tracking-wide hover:bg-white/90 transition-all duration-300 hover:scale-105"
+                    className="w-full sm:w-auto px-10 py-5 bg-white text-black rounded-full font-medium text-sm tracking-wide hover:bg-white/90 transition-all duration-300 hover:scale-105 text-center"
                   >
                     Start a Project
                   </a>
@@ -78,7 +80,7 @@ export default function App() {
                     href="https://github.com/Munim430-ai"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-10 py-5 border border-white/10 rounded-full text-sm text-white/60 hover:border-white/30 hover:text-white transition-all duration-300"
+                    className="w-full sm:w-auto px-10 py-5 border border-white/10 rounded-full text-sm text-white/60 hover:border-white/30 hover:text-white transition-all duration-300 text-center"
                   >
                     View GitHub
                   </a>
