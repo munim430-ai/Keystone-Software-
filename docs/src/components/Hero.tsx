@@ -9,6 +9,7 @@ export default function Hero() {
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
+  const logoCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const headline = headlineRef.current;
@@ -20,28 +21,45 @@ export default function Hero() {
     gsap.set(split.chars, { y: '110%', opacity: 0 });
 
     const tl = gsap.timeline({ delay: 0.2 });
-
     tl.to(logoRef.current, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
-      .to(split.chars, {
-        y: '0%',
-        opacity: 1,
-        duration: 0.9,
-        stagger: 0.022,
-        ease: 'power4.out',
-      }, '-=0.4')
-      .to([subRef.current, ctaRef.current], {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: 'power3.out',
-      }, '-=0.4');
+      .to(split.chars, { y: '0%', opacity: 1, duration: 0.9, stagger: 0.022, ease: 'power4.out' }, '-=0.4')
+      .to([subRef.current, ctaRef.current], { opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out' }, '-=0.4');
 
-    return () => {
-      split.revert();
-      tl.kill();
-    };
+    // Gentle float animation on logo
+    gsap.to(logoCardRef.current, {
+      y: -10,
+      duration: 3,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+
+    return () => { split.revert(); tl.kill(); };
   }, []);
+
+  // 3D tilt on mouse move over logo
+  const handleLogoMouseMove = (e: React.MouseEvent) => {
+    const rect = logoCardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+    gsap.to(logoCardRef.current, {
+      rotateX: -y * 18,
+      rotateY: x * 18,
+      duration: 0.3,
+      ease: 'power2.out',
+      transformPerspective: 800,
+    });
+  };
+
+  const handleLogoMouseLeave = () => {
+    gsap.to(logoCardRef.current, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 1,
+      ease: 'elastic.out(1, 0.4)',
+    });
+  };
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-black overflow-hidden">
@@ -55,18 +73,29 @@ export default function Hero() {
         <div className="liq-blob liq-5" />
       </div>
 
-      {/* Radial vignette to keep center dark/readable */}
+      {/* Radial vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, #000 100%)',
-          zIndex: 1,
-        }}
+        style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 25%, #000 100%)', zIndex: 1 }}
       />
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-5xl w-full">
-        <div ref={logoRef} className="mb-10 md:mb-16" style={{ opacity: 0, transform: 'translateY(20px)' }}>
-          <KeystoneLogo className="w-48 md:w-72 h-auto" />
+
+        {/* Logo with 3D tilt + glow */}
+        <div
+          ref={logoRef}
+          className="mb-10 md:mb-16"
+          style={{ opacity: 0, transform: 'translateY(20px)' }}
+        >
+          <div
+            ref={logoCardRef}
+            className="logo-3d-card inline-block cursor-pointer"
+            onMouseMove={handleLogoMouseMove}
+            onMouseLeave={handleLogoMouseLeave}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            <KeystoneLogo className="w-48 md:w-72 h-auto logo-glow" />
+          </div>
         </div>
 
         <div className="overflow-hidden mb-6 md:mb-8">
