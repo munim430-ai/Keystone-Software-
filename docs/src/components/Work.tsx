@@ -9,7 +9,7 @@ const projects = [
     tech: ['Python', 'Excel', 'DOCX', 'Windows'],
     href: 'https://munim430-ai.github.io/visa_form/',
     live: true,
-    image: 'https://images.unsplash.com/photo-1568992688065-536aad8a12f6?w=700&q=70&auto=format&fit=crop',
+    image: `${import.meta.env.BASE_URL}screenshots/visa-form.png`,
     gradient: 'from-white/[0.07] to-white/[0.02]',
   },
   {
@@ -19,7 +19,7 @@ const projects = [
     tech: ['React', 'TypeScript', 'Tailwind', 'Vercel'],
     href: 'https://keystone-website-main.vercel.app/',
     live: true,
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700&q=70&auto=format&fit=crop',
+    image: `${import.meta.env.BASE_URL}screenshots/keystone-edu.png`,
     gradient: 'from-white/[0.08] to-white/[0.02]',
   },
   {
@@ -29,7 +29,7 @@ const projects = [
     tech: ['Python', 'Excel', 'DOCX', 'Offline'],
     href: 'https://munim430-ai.github.io/Folio/',
     live: true,
-    image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=700&q=70&auto=format&fit=crop',
+    image: `${import.meta.env.BASE_URL}screenshots/folio.png`,
     gradient: 'from-white/[0.06] to-white/[0.02]',
   },
   {
