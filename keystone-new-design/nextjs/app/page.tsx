@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
 import Cursor from "@/components/Cursor";
 import Nav from "@/components/Nav";
@@ -14,9 +13,7 @@ import MoatScene from "@/components/scenes/MoatScene";
 import OriginScene from "@/components/scenes/OriginScene";
 import ContactScene from "@/components/scenes/ContactScene";
 import Footer from "@/components/Footer";
-
-// 3D background — client only, dynamic import (ssr: false)
-const CubeStage = dynamic(() => import("@/components/3d/CubeStage"), { ssr: false });
+import CubeStageClient from "@/components/3d/CubeStageClient";
 
 export default function Page() {
   return (
@@ -27,7 +24,7 @@ export default function Page() {
       <SectionRail />
       <RevealObserver />
 
-      <CubeStage />
+      <CubeStageClient />
       <div className="vignette fixed inset-0 z-[2] pointer-events-none" aria-hidden />
       <div className="grain fixed -inset-1/2 z-[3] pointer-events-none opacity-[0.04]" aria-hidden />
 
