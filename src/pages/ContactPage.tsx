@@ -27,9 +27,8 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', service: '', message: '' })
   const [sent, setSent] = useState(false)
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // In production, wire to your preferred form backend (Formspree, Supabase, etc.)
     const subject = `Project Inquiry — ${form.service || 'General'}`
     const body = `Name: ${form.name}\nEmail: ${form.email}\nService: ${form.service}\n\n${form.message}`
     window.open(`mailto:hello@keystonesoftware.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`)
@@ -132,7 +131,10 @@ export default function ContactPage() {
                   <p style={{ fontSize: '0.85rem', color: '#555' }}>We'll get back to you within 24 hours.</p>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <form
+                  onSubmit={handleSubmit}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+                >
                   <h3 style={{ fontSize: '1rem', color: '#888', marginBottom: '0.5rem' }}>Project Brief</h3>
 
                   <input
@@ -176,13 +178,13 @@ export default function ContactPage() {
                   />
 
                   <button
-                    onClick={handleSubmit}
+                    type="submit"
                     className="btn-primary"
                     style={{ width: '100%', justifyContent: 'center', fontSize: '0.88rem', padding: '0.85rem' }}
                   >
                     Send Message →
                   </button>
-                </div>
+                </form>
               )}
             </motion.div>
           </div>

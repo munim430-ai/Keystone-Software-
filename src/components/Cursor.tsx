@@ -1,54 +1,60 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 
+const INTERACTIVE = 'a, button, [data-cursor]'
+
 export default function Cursor() {
   const dotRef  = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Only on pointer devices
     if (!window.matchMedia('(hover: hover)').matches) return
 
     const dot  = dotRef.current
     const ring = ringRef.current
     if (!dot || !ring) return
 
-    let mx = 0, my = 0
-
     const onMove = (e: MouseEvent) => {
-      mx = e.clientX
-      my = e.clientY
-      gsap.to(dot,  { x: mx, y: my, duration: 0,   ease: 'none' })
-      gsap.to(ring, { x: mx, y: my, duration: 0.45, ease: 'power3.out' })
+      gsap.to(dot,  { x: e.clientX, y: e.clientY, duration: 0,    ease: 'none' })
+      gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.45, ease: 'power3.out' })
     }
 
-    const onEnterLink = () => {
-      gsap.to(ring, { scale: 1.8, opacity: 0.4, duration: 0.2 })
-      gsap.to(dot,  { scale: 0,   duration: 0.2 })
-    }
-    const onLeaveLink = () => {
-      gsap.to(ring, { scale: 1,   opacity: 1,   duration: 0.2 })
-      gsap.to(dot,  { scale: 1,   duration: 0.2 })
+    const onOver = (e: MouseEvent) => {
+      if ((e.target as Element).closest(INTERACTIVE)) {
+        gsap.to(ring, { scale: 1.8, opacity: 0.4, duration: 0.2 })
+        gsap.to(dot,  { scale: 0,               duration: 0.2 })
+      }
     }
 
-    window.addEventListener('mousemove', onMove)
+    const onOut = (e: MouseEvent) => {
+      if ((e.target as Element).closest(INTERACTIVE)) {
+        const related = e.relatedTarget as Element | null
+        if (!related?.closest?.(INTERACTIVE)) {
+          gsap.to(ring, { scale: 1, opacity: 1, duration: 0.2 })
+          gsap.to(dot,  { scale: 1,             duration: 0.2 })
+        }
+      }
+    }
 
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
-        el.addEventListener('mouseenter', onEnterLink)
-        el.addEventListener('mouseleave', onLeaveLink)
-      })
-    })
-    observer.observe(document.body, { childList: true, subtree: true })
+    const onLeaveWindow = () => {
+      gsap.to([dot, ring], { opacity: 0, duration: 0.2 })
+    }
+    const onEnterWindow = () => {
+      gsap.to([dot, ring], { opacity: 1, duration: 0.2 })
+    }
 
-    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
-      el.addEventListener('mouseenter', onEnterLink)
-      el.addEventListener('mouseleave', onLeaveLink)
-    })
+    window.addEventListener('mousemove',  onMove)
+    document.addEventListener('mouseover',  onOver)
+    document.addEventListener('mouseout',   onOut)
+    document.addEventListener('mouseleave', onLeaveWindow)
+    document.addEventListener('mouseenter', onEnterWindow)
 
     return () => {
-      window.removeEventListener('mousemove', onMove)
-      observer.disconnect()
+      window.removeEventListener('mousemove',  onMove)
+      document.removeEventListener('mouseover',  onOver)
+      document.removeEventListener('mouseout',   onOut)
+      document.removeEventListener('mouseleave', onLeaveWindow)
+      document.removeEventListener('mouseenter', onEnterWindow)
     }
   }, [])
 

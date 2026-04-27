@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import ServicesSection from '../components/ServicesSection'
 import ProcessSection from '../components/ProcessSection'
+import PricingSection from '../components/PricingSection'
 
 export default function ServicesPage() {
   return (
@@ -28,6 +29,7 @@ export default function ServicesPage() {
       </div>
       <ServicesSection />
       <ProcessSection />
+      <PricingSection />
     </div>
   )
 }

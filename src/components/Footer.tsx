@@ -9,8 +9,9 @@ const LINKS = [
 ]
 
 const SOCIALS = [
-  { href: 'https://github.com/munim430-ai', label: 'GitHub' },
-  { href: 'https://wa.me/8801941646278',    label: 'WhatsApp' },
+  { href: 'https://github.com/munim430-ai',                      label: 'GitHub'    },
+  { href: 'https://wa.me/8801941646278',                          label: 'WhatsApp'  },
+  { href: 'https://www.linkedin.com/company/keystone-software-bd', label: 'LinkedIn'  },
 ]
 
 export default function Footer() {

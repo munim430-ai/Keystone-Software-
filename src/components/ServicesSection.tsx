@@ -87,6 +87,7 @@ export default function ServicesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
+          className="bento-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
@@ -150,7 +151,7 @@ export default function ServicesSection() {
 
         <style>{`
           @media (max-width: 768px) {
-            .bento-grid [style*="span 2"] {
+            .bento-grid > div {
               grid-column: span 1 !important;
             }
           }
