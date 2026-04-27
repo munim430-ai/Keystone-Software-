@@ -4,7 +4,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/Keystone-Software-/',
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
